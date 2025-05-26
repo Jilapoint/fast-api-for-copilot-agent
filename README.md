@@ -136,5 +136,39 @@ FastAPIAudit/
    ```
    https://<WebAppName>.azurewebsites.net
    ```
+
+## Known Issues and Troubleshooting
+
+
+
+### 1. Docker Engine Connection Error
+**Error:**
+```
+error during connect: Get "http://%2F%2F.%2Fpipe%2FdockerDesktopLinuxEngine/v1.49/containers/json": open //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specified.
+```
+**Solution:**
+- Restart Docker Desktop.
+- Verify that the "Enable the WSL 2 based engine" option is enabled in Docker Desktop settings.
+
+### 2. Python Package Installation Issues
+**Error:**
+```
+ERROR: Could not install packages due to an OSError: [WinError 2] The system cannot find the file specified.
+```
+**Solution:**
+- Manually delete the problematic `.exe` or `.deleteme` files in the `Scripts` directory of your Python installation.
+- Run the installation command with administrative privileges.
+
+### 3. Azure Deployment Issues
+**Error:**
+```
+Failed to deploy container to Azure App Service.
+```
+**Solution:**
+- Ensure the Azure Container Registry (ACR) is properly configured and the image is pushed successfully.
+- Verify that the web app is configured to authenticate with ACR.
+
+If you encounter any other issues, feel free to document them here for future reference.
+
 ## License
 This project is licensed under the MIT License.
