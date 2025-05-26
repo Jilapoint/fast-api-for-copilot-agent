@@ -93,6 +93,48 @@ FastAPIAudit/
 ├── Dockerfile       # Docker configuration
 └── swagger2.json    # Swagger documentation
 ```
+## Deployment Steps
 
+### Deploy Locally with Docker
+1. Build the Docker image:
+   ```bash
+   docker build -t fastapi-audit .
+   ```
+2. Run the Docker container:
+   ```bash
+   docker run -d -p 8000:8000 fastapi-audit
+   ```
+3. Access the application at [http://127.0.0.1:8000](http://127.0.0.1:8000).
+
+### Deploy to Azure
+1. **Create an Azure Container Registry (ACR):**
+   ```bash
+   az acr create --resource-group <ResourceGroupName> --name <RegistryName> --sku Basic
+   ```
+2. **Log in to ACR:**
+   ```bash
+   az acr login --name <RegistryName>
+   ```
+3. **Tag the Docker image for ACR:**
+   ```bash
+   docker tag fastapi-audit <RegistryName>.azurecr.io/fastapi-audit:latest
+   ```
+4. **Push the image to ACR:**
+   ```bash
+   docker push <RegistryName>.azurecr.io/fastapi-audit:latest
+   ```
+5. **Deploy the container to Azure App Service:**
+   ```bash
+   az appservice plan create --name <AppServicePlanName> --resource-group <ResourceGroupName> --is-linux --sku B1
+   az webapp create --resource-group <ResourceGroupName> --plan <AppServicePlanName> --name <WebAppName> --deployment-container-image-name <RegistryName>.azurecr.io/fastapi-audit:latest
+   ```
+6. **Configure ACR authentication for the web app:**
+   ```bash
+   az webapp config container set --name <WebAppName> --resource-group <ResourceGroupName> --docker-custom-image-name <RegistryName>.azurecr.io/fastapi-audit:latest --docker-registry-server-url https://<RegistryName>.azurecr.io
+   ```
+7. Access the deployed application at:
+   ```
+   https://<WebAppName>.azurewebsites.net
+   ```
 ## License
 This project is licensed under the MIT License.
